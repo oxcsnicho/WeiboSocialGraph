@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
 
-  "name": "One-click Kittens",
+  "name": "Weibo Social Graph",
   "description": "This extension demonstrates a browser action with
 kittens.",
   "version": "1.0",
@@ -9,8 +9,9 @@ kittens.",
   "permissions": [
     "https://secure.flickr.com/"
   ],
-  "browser_action": {
-    "default_icon": "icon.png",
-    "default_popup": "popup.html"
-  }
+    "app":{
+        "launch":{
+            "local_path":"index.html"
+        }
+    }
 }

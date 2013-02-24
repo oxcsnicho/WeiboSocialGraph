@@ -7,7 +7,7 @@ kittens.",
   "version": "1.0",
 
   "permissions": [
-    "https://secure.flickr.com/"
+    "https://api.weibo.com/"
   ],
     "app":{
         "launch":{

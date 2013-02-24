@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Getting Started Extension's Popup</title>
+    <style>
+      body {
+        min-width: 357px;
+        overflow-x: hidden;
+      }
+
+      img {
+        margin: 5px;
+        border: 2px solid black;
+        vertical-align: middle;
+        width: 75px;
+        height: 75px;
+      }
+    </style>
+
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: http://developer.chrome.com/extensions/contentSecurityPolicy.html
+     -->
+     <script src="sina.js" charset="utf-8"></script>
+     <!--
+    <script src="popup.js"></script>
+    -->
+  </head>
+  <body>
+	  <table>
+		  <tr>
+			  <td>
+	  <table>
+		  <tr>
+			  <td>
+								Access token: <input id="access_token" type="text"
+								name="access_token"/>
+			  </td>
+		  </tr>
+		  <tr>
+			  <td>
+								<button type="button">Get Users</button>
+			  </td>
+		  </tr>
+		  <tr>
+			  <td>
+								<button type="button">Get Relationships</button>
+			  </td>
+		  </tr>
+		  <tr>
+			  <td>
+								<button type="button">Generate Graph</button>
+			  </td>
+		  </tr>
+		  <tr>
+			  <td>
+								<button type="button">import a cluster</button>
+			  </td>
+		  </tr>
+	  </table>
+			  </td>
+			  <td>
+								<div id="console">
+<textarea rows="4" cols="50">
+				this is the console area
+</textarea>
+								</div>
+			  </td>
+		  </tr>
+	  </table>
+  </body>
+</html>
+

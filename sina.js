@@ -105,6 +105,49 @@ var sinaClient =
 
 	clearTimeout: function(){
 		window.clearTimeout(sc.timeout_id);
+	},
+
+	generateXmlDocument: function(){
+		var doc = document.implementation.createDocument(null, "gexf", null);
+		doc.childNodes[0].setAttribute("version", "1.2");
+		doc.childNodes[0].setAttribute("xmlns", "http://www.gexf.net/1.2draft");
+
+		var graph = doc.createElement("graph");
+		graph.setAttribute("mode", "static");
+		graph.setAttribute("defaultedgetype", "directed");
+
+		var nodes = doc.createElement("nodes");
+		var edges = doc.createElement("edges");
+		iid = 0;
+		for(i=0;i<sc.users.length;i++)
+		{
+			p=doc.createElement("node");
+			p.setAttribute("id", sc.users[i].id); // what???
+			p.setAttribute("label", sc.users[i].name);
+			nodes.appendChild(p);
+
+			adj = sc.mapping[sc.users[i].id];
+			if(!!adj)
+			{
+				for(j=0;j<adj.length; j++)
+				{
+					q = doc.createElement("edge");
+					q.setAttribute("id", iid++);
+					q.setAttribute("source", sc.users[i].id);
+					q.setAttribute("target", adj[j].id);
+					edges.appendChild(q);
+				}
+			}
+		}
+		graph.appendChild(nodes);
+		graph.appendChild(edges);
+		doc.childNodes[0].appendChild(graph);
+		
+		return doc;
+	},
+
+	generateXmlDocumentToTextarea: function(){
+		$("textarea").val((new XMLSerializer()).serializeToString(sc.generateXmlDocument()));
 	}
 
 }

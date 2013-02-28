@@ -1,7 +1,8 @@
 var Console = {
 	log: function(a) {
 		console.log(a);
-		jsLog.write(a);
+		if("object" != typeof a)
+			$("#console").html($("#console").html()+"<br>"+a.valueOf());
 	}
 }
 
@@ -29,6 +30,7 @@ var sinaClient =
 	users:[],
 
 	getFriends: function(){
+		Console.log("开始获取用户...");
 		sc.page = 0;
 		sc._getFriends();
 	},
@@ -47,7 +49,7 @@ var sinaClient =
 			return;
 
 			sc.users = sc.users.concat(sp.users);
-			Console.log("users.length: "+sc.users.length);
+			Console.log("已获取"+sc.users.length + "人");
 
 			if(sp.total_number > 150)
 			setTimeout(function (){
@@ -93,7 +95,7 @@ var sinaClient =
 					sc.mapping[sc.uid] = sc.mapping[sc.uid].concat(sp.users);
 				else
 					sc.mapping[sc.uid] = sp.users;
-				Console.log("user "+uid+", page "+sc.page+", total " + sc.mapping[sc.uid].length);
+				Console.log("用户名: "+sc.users[uid].name+", 第"+sc.page+"页, ta有" + sc.mapping[sc.uid].length+"名好友");
 
 				if(sp.total_number > 100)
 					sc._getOneFriendRelations(uid);
@@ -106,7 +108,7 @@ var sinaClient =
 				sc.sec*=1.5;
 				Console.log("****call failed. retrying in "+sc.sec+" seconds");
 			sc.timeout_id = setTimeout(function (){
-				sc._getFriendsRelations(sc.uidid);
+				c._getFriendsRelations(sc.uidid);
 			}, sc.sec*1000);
 			}
 		};
@@ -120,13 +122,14 @@ var sinaClient =
 			return;
 
 		sc.uidid = i;
-		Console.log("["+i+" of "+sc.users.length+"]");
+		Console.log("第"+i+"名好友，共"+sc.users.length+"人");
 		sc.page = 0;
 		sc._getOneFriendRelations(sc.users[i].id);
 	},
 
 	getFriendsRelations: function(){
-		sc._getFriendsRelations(0);
+		Console.log("开始获取朋友间的关系...");
+		c._getFriendsRelations(0);
 	},
 
 	clearTimeout: function(){
@@ -181,7 +184,8 @@ var sc = sinaClient;
 $(function (){
 	jsLog.init();
 	sinaClient._init();
-	document.getElementById("getUser").addEventListener('click', sc.getFriends);
-	document.getElementById("getRelationships").addEventListener('click', sc.getFriendsRelations);
-	document.getElementById("generateGraph").addEventListener('click', sc.generateXmlDocumentToTextarea);
+	$("#getUser").click(sc.getFriends);
+	$("#getRelationships").click(sc.getFriendsRelations);
+	$("#generateGraph").click(sc.generateXmlDocumentToTextarea);
+	$("#access_token").focusout(function(){sc._init();});
 });

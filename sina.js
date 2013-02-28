@@ -1,3 +1,10 @@
+var Console = {
+	log: function(a) {
+		console.log(a);
+		jsLog.write(a);
+	}
+}
+
 var sinaClient = 
 {
 	_init: function(){
@@ -23,7 +30,7 @@ var sinaClient =
 
 	getFriends: function(){
 		sc.page = 0;
-		this._getFriends();
+		sc._getFriends();
 	},
 
 	_getFriends: function(){
@@ -35,12 +42,12 @@ var sinaClient =
 		'page': sc.page
 		},
 		success:function(sp){
-			console.log(sp);
+			Console.log(sp);
 			if(sp.users.length==0)
 			return;
 
 			sc.users = sc.users.concat(sp.users);
-			console.log("users.length: "+sc.users.length);
+			Console.log("users.length: "+sc.users.length);
 
 			if(sp.total_number > 150)
 			setTimeout(function (){
@@ -56,11 +63,15 @@ var sinaClient =
 
 	mapping:{},
 	uid:0,
+	ssp: {},
+	ajx: {},
+	sec: 1,
+	uidid:0,
 
 	_getOneFriendRelations: function(uid){
 		sc.page++;
 		sc.uid = uid;
-		$.ajax({
+		sc.ajx={
 			url:"https://api.weibo.com/2/friendships/friends/in_common.json",
 			data: {
 				'uid': uid,
@@ -68,35 +79,50 @@ var sinaClient =
 			'page': sc.page
 			},
 			success:function(sp){
-				console.log(sp);
+				Console.log(sp);
+				ssp = sp;
 				if(sp.total_number == 0)
-			return;
+				{
+					sc.timeout_id = setTimeout(function(){
+						sc._getFriendsRelations(sc.uidid+1);
+					}, 1500);
+					return;
+				}
 
-		if(!!sc.mapping[sc.uid])
-			sc.mapping[sc.uid] = sc.mapping[sc.uid].concat(sp.users);
-		else
-			sc.mapping[sc.uid] = sp.users;
-		console.log("user "+uid+", page "+sc.page+", total " + sc.mapping[sc.uid].length);
+				if(!!sc.mapping[sc.uid])
+					sc.mapping[sc.uid] = sc.mapping[sc.uid].concat(sp.users);
+				else
+					sc.mapping[sc.uid] = sp.users;
+				Console.log("user "+uid+", page "+sc.page+", total " + sc.mapping[sc.uid].length);
 
-		if(sp.total_number > 100)
-			sc._getOneFriendRelations(uid);
+				if(sp.total_number > 100)
+					sc._getOneFriendRelations(uid);
+				else
+					sc.timeout_id = setTimeout(function(){
+						sc._getFriendsRelations(sc.uidid+1);
+					}, 1500);
+			},
+			error: function(a,b,c) {
+				sc.sec*=1.5;
+				Console.log("****call failed. retrying in "+sc.sec+" seconds");
+			sc.timeout_id = setTimeout(function (){
+				sc._getFriendsRelations(sc.uidid);
+			}, sc.sec*1000);
 			}
-		});
+		};
+		$.ajax(sc.ajx);
 	},
-	
+
 	timeout_id: 0,
 
 	_getFriendsRelations: function(i){
 		if(!sc.users || sc.users.length == 0 || i >= sc.users.length)
 			return;
 
-		console.log("["+i+" of "+sc.users.length+"]");
+		sc.uidid = i;
+		Console.log("["+i+" of "+sc.users.length+"]");
 		sc.page = 0;
 		sc._getOneFriendRelations(sc.users[i].id);
-
-		sc.timeout_id = setTimeout(function(){
-			sc._getFriendsRelations(i+1);
-		}, 1500);
 	},
 
 	getFriendsRelations: function(){
@@ -142,7 +168,7 @@ var sinaClient =
 		graph.appendChild(nodes);
 		graph.appendChild(edges);
 		doc.childNodes[0].appendChild(graph);
-		
+
 		return doc;
 	},
 
@@ -153,5 +179,9 @@ var sinaClient =
 }
 var sc = sinaClient;
 $(function (){
+	jsLog.init();
 	sinaClient._init();
+	document.getElementById("getUser").addEventListener('click', sc.getFriends);
+	document.getElementById("getRelationships").addEventListener('click', sc.getFriendsRelations);
+	document.getElementById("generateGraph").addEventListener('click', sc.generateXmlDocumentToTextarea);
 });

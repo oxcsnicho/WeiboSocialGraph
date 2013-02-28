@@ -18,6 +18,7 @@
     </style>
 
 		<script src="jquery.js"></script>
+     <script src="jslog.js" charset="utf-8"></script>
      <script src="sina.js" charset="utf-8"></script>
      <!--
     <script src="popup.js"></script>
@@ -37,17 +38,17 @@
 		  </tr>
 		  <tr>
 			  <td>
-								<button type="button">Get Users</button>
+								<button type="button" id="getUser">Get Users</button>
 			  </td>
 		  </tr>
 		  <tr>
 			  <td>
-								<button type="button">Get Relationships</button>
+								<button type="button" id="getRelationships">Get Relationships</button>
 			  </td>
 		  </tr>
 		  <tr>
 			  <td>
-								<button type="button">Generate Graph</button>
+								<button type="button" id="generateGraph">Generate Graph</button>
 			  </td>
 		  </tr>
 		  <tr>
@@ -58,12 +59,16 @@
 	  </table>
 			  </td>
 			  <td>
-								<div id="console">
 <textarea rows="4" cols="50">
 				this is the console area
 </textarea>
-								</div>
 			  </td>
+				<td width=600>
+								<div >
+												<p id="console">
+												</p>
+								</div>
+				</td>
 		  </tr>
 	  </table>
   </body>

@@ -8,6 +8,7 @@ var Console = {
 
 var sinaClient = 
 {
+	target_uid: 0;
 	_init: function(){
 		$.ajaxSetup({
 			data:{
@@ -67,7 +68,7 @@ var sinaClient =
 	uid:0,
 	ssp: {},
 	ajx: {},
-	sec: 1,
+	sec: 15,
 	uidid:0,
 
 	_getOneFriendRelations: function(uid){
@@ -95,7 +96,7 @@ var sinaClient =
 					sc.mapping[sc.uid] = sc.mapping[sc.uid].concat(sp.users);
 				else
 					sc.mapping[sc.uid] = sp.users;
-				Console.log("用户名: "+sc.users[uid].name+", 第"+sc.page+"页, ta有" + sc.mapping[sc.uid].length+"名好友");
+				Console.log("用户名: "+sc.users[sc.uidid].name+", 第"+sc.page+"页, ta有" + sc.mapping[sc.uid].length+"名好友");
 
 				if(sp.total_number > 100)
 					sc._getOneFriendRelations(uid);
@@ -108,7 +109,7 @@ var sinaClient =
 				sc.sec*=1.5;
 				Console.log("****call failed. retrying in "+sc.sec+" seconds");
 			sc.timeout_id = setTimeout(function (){
-				c._getFriendsRelations(sc.uidid);
+				sc._getFriendsRelations(sc.uidid);
 			}, sc.sec*1000);
 			}
 		};
@@ -129,7 +130,7 @@ var sinaClient =
 
 	getFriendsRelations: function(){
 		Console.log("开始获取朋友间的关系...");
-		c._getFriendsRelations(0);
+		sc._getFriendsRelations(0);
 	},
 
 	clearTimeout: function(){
@@ -188,4 +189,5 @@ $(function (){
 	$("#getRelationships").click(sc.getFriendsRelations);
 	$("#generateGraph").click(sc.generateXmlDocumentToTextarea);
 	$("#access_token").focusout(function(){sc._init();});
+	$("#target_uid").focusout(function(){sc.target_uid = $("#target_uid").text();});
 });

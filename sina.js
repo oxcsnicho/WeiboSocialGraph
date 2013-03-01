@@ -2,13 +2,13 @@ var Console = {
 	log: function(a) {
 		console.log(a);
 		if("object" != typeof a)
-			$("#console").html($("#console").html()+"<br>"+a.valueOf());
+			$("#console").html(a.valueOf()+"<br>"+$("#console").html());
 	}
 }
 
 var sinaClient = 
 {
-	target_uid: 0;
+	target_uid: 0,
 	_init: function(){
 		$.ajaxSetup({
 			data:{
@@ -41,6 +41,7 @@ var sinaClient =
 		$.ajax({
 			url:"https://api.weibo.com/2/friendships/friends/bilateral.json",
 		data: {
+			'uid': sc.target_uid,
 			'count': 200,
 		'page': sc.page
 		},
@@ -77,6 +78,7 @@ var sinaClient =
 		sc.ajx={
 			url:"https://api.weibo.com/2/friendships/friends/in_common.json",
 			data: {
+				'suid': sc.target_uid,
 				'uid': uid,
 			'count': 200,
 			'page': sc.page
@@ -123,7 +125,7 @@ var sinaClient =
 			return;
 
 		sc.uidid = i;
-		Console.log("第"+i+"名好友，共"+sc.users.length+"人");
+		Console.log("用户名："+sc.users[sc.uidid].name+", 是第"+i+"名好友，共"+sc.users.length+"人");
 		sc.page = 0;
 		sc._getOneFriendRelations(sc.users[i].id);
 	},
@@ -133,7 +135,7 @@ var sinaClient =
 		sc._getFriendsRelations(0);
 	},
 
-	clearTimeout: function(){
+	abort: function(){
 		window.clearTimeout(sc.timeout_id);
 	},
 
@@ -178,16 +180,27 @@ var sinaClient =
 
 	generateXmlDocumentToTextarea: function(){
 		$("textarea").val((new XMLSerializer()).serializeToString(sc.generateXmlDocument()));
+	},
+
+	reset: function(){
+		sc.users = [];
+		sc.mapping = {};
+		sc.page = 0;
+		sc.uid = 0;
+		sc.uidid = 0;
+	},
+
+	resumeFriendsRelations: function(){
+		sc._getFriendsRelations(sc.uidid);
 	}
 
 }
 var sc = sinaClient;
 $(function (){
-	jsLog.init();
 	sinaClient._init();
 	$("#getUser").click(sc.getFriends);
 	$("#getRelationships").click(sc.getFriendsRelations);
 	$("#generateGraph").click(sc.generateXmlDocumentToTextarea);
 	$("#access_token").focusout(function(){sc._init();});
-	$("#target_uid").focusout(function(){sc.target_uid = $("#target_uid").text();});
+	$("#target_uid").focusout(function(){sc.target_uid = $("#target_uid")[0].value;});
 });

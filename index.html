@@ -18,6 +18,8 @@
     </style>
 
 		<script src="jquery.js"></script>
+     <script src="sigma.js" charset="utf-8"></script>
+     <script src="sigma.parseGexf.js" charset="utf-8"></script>
      <script src="sina.js" charset="utf-8"></script>
      <!--
      <script src="jslog.js" charset="utf-8"></script>
@@ -68,16 +70,19 @@
 			  </td>
 			  <td>
 <textarea rows="4" cols="50">
-				this is the console area
 </textarea>
 			  </td>
-</tr>
-		</table>
-		<div class="consolediv">
-						<h4>Console Log</h4>
+			  <td>
+		<div class="consolediv" style="overflow: scroll; height: 200px; width: 600px; background: #eee">
+						<h4 style="text-align:center">Console Log</h4>
 						<p id="console">
 						</p>
 		</div>
+			  </td>
+</tr>
+		</table>
+<canvas style="position: absolute; background: #000"
+id="sigma-example" class="sigma_mouse_canvas" width="1206px" height="500px"></canvas>
 	</body>
 </html>
 

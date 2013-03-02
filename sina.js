@@ -8,6 +8,7 @@ var Console = {
 
 var sinaClient = 
 {
+	interval: 300,
 	target_uid: 0,
 	_init: function(){
 		$.ajaxSetup({
@@ -29,6 +30,7 @@ var sinaClient =
 
 	page:0,
 	users:[],
+	userids:[],
 
 	getFriends: function(){
 		Console.log("开始获取用户...");
@@ -56,7 +58,7 @@ var sinaClient =
 			if(sp.total_number > 150)
 			setTimeout(function (){
 				sc._getFriends();
-			}, 1500);
+			}, sc.interval);
 		}
 		});
 	},
@@ -90,7 +92,7 @@ var sinaClient =
 				{
 					sc.timeout_id = setTimeout(function(){
 						sc._getFriendsRelations(sc.uidid+1);
-					}, 1500);
+					}, sc.interval);
 					return;
 				}
 
@@ -98,14 +100,17 @@ var sinaClient =
 					sc.mapping[sc.uid] = sc.mapping[sc.uid].concat(sp.users);
 				else
 					sc.mapping[sc.uid] = sp.users;
-				Console.log("用户名: "+sc.users[sc.uidid].name+", 第"+sc.page+"页, ta有" + sc.mapping[sc.uid].length+"名好友");
+
+				Console.log("["+Math.ceil((sc.uidid + 1)/sc.users.length*100)+"%]"
+						+ sc.users[sc.uidid].name+", ta有"
+						+ sc.mapping[sc.uid].length+"名好友");
 
 				if(sp.total_number > 100)
 					sc._getOneFriendRelations(uid);
 				else
 					sc.timeout_id = setTimeout(function(){
 						sc._getFriendsRelations(sc.uidid+1);
-					}, 1500);
+					}, sc.interval);
 			},
 			error: function(a,b,c) {
 				sc.sec*=1.5;
@@ -125,7 +130,6 @@ var sinaClient =
 			return;
 
 		sc.uidid = i;
-		Console.log("用户名："+sc.users[sc.uidid].name+", 是第"+i+"名好友，共"+sc.users.length+"人");
 		sc.page = 0;
 		sc._getOneFriendRelations(sc.users[i].id);
 	},
@@ -151,6 +155,9 @@ var sinaClient =
 		var nodes = doc.createElement("nodes");
 		var edges = doc.createElement("edges");
 		iid = 0;
+		var userids = [];
+		for(i=0;i<sc.users.length;i++)
+			userids.push(sc.users[i]);
 		for(i=0;i<sc.users.length;i++)
 		{
 			p=doc.createElement("node");
@@ -163,6 +170,8 @@ var sinaClient =
 			{
 				for(j=0;j<adj.length; j++)
 				{
+					if(-1 == userids.indexOf(adj[j].id))
+						continue;
 					q = doc.createElement("edge");
 					q.setAttribute("id", iid++);
 					q.setAttribute("source", sc.users[i].id);
@@ -179,7 +188,18 @@ var sinaClient =
 	},
 
 	generateXmlDocumentToTextarea: function(){
-		$("textarea").val((new XMLSerializer()).serializeToString(sc.generateXmlDocument()));
+		var gexf = sc.generateXmlDocument();
+		$("textarea").val((new XMLSerializer()).serializeToString(gexf));
+
+		if(!sigInst)
+			init();
+
+		// Parse a GEXF encoded file to fill the graph
+		// (requires "sigma.parseGexf.js" to be included)
+		sigInst.parseGexf(gexf);
+
+		// Draw the graph :
+		sigInst.draw();
 	},
 
 	reset: function(){
@@ -196,6 +216,25 @@ var sinaClient =
 
 }
 var sc = sinaClient;
+var sigInst;
+function init() {
+	sigInst = sigma.init(document.getElementById('sigma-example')).drawingProperties({
+		defaultLabelColor: '#fff',
+			defaultLabelSize: 14,
+			defaultLabelBGColor: '#fff',
+			defaultLabelHoverColor: '#000',
+			labelThreshold: 6,
+			defaultEdgeType: 'curve'
+	}).graphProperties({
+		minNodeSize: 0.5,
+	maxNodeSize: 5,
+	minEdgeSize: 1,
+	maxEdgeSize: 1
+	}).mouseProperties({
+		maxRatio: 32
+	});
+}
+
 $(function (){
 	sinaClient._init();
 	$("#getUser").click(sc.getFriends);

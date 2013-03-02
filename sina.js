@@ -157,7 +157,7 @@ var sinaClient =
 		iid = 0;
 		var userids = [];
 		for(i=0;i<sc.users.length;i++)
-			userids.push(sc.users[i]);
+			userids.push(sc.users[i].id);
 		for(i=0;i<sc.users.length;i++)
 		{
 			p=doc.createElement("node");
@@ -240,6 +240,11 @@ $(function (){
 	$("#getUser").click(sc.getFriends);
 	$("#getRelationships").click(sc.getFriendsRelations);
 	$("#generateGraph").click(sc.generateXmlDocumentToTextarea);
+	$("#renderGraph").click(function(){
+		if(!sigInst) init();
+		sigInst.parseGexf("/"+$("#graph_name").val());
+		sigInst.draw();
+	});
 	$("#access_token").focusout(function(){sc._init();});
 	$("#target_uid").focusout(function(){sc.target_uid = $("#target_uid")[0].value;});
 });

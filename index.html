@@ -1,88 +1,121 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Getting Started Extension's Popup</title>
-    <style>
-      body {
-        min-width: 357px;
-        overflow-x: hidden;
-      }
+	<head>
+		<title>Getting Started Extension's Popup</title>
+		<style>
+			body {
+				min-width: 357px;
+				overflow-x: hidden;
+				margin:0;
+				font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+				font-size:13px;
+				line-height:18px;
+				color:#333333;
+				background-color:#ffffff;
+			}
 
-      img {
-        margin: 5px;
-        border: 2px solid black;
-        vertical-align: middle;
-        width: 75px;
-        height: 75px;
-      }
-    </style>
+			img {
+				margin: 5px;
+				border: 2px solid black;
+				vertical-align: middle;
+				width: 75px;
+				height: 75px;
+			}
+
+			.sigma-parent {
+				position: relative;
+				border-radius: 4px;
+				-moz-border-radius: 4px;
+				-webkit-border-radius: 4px;
+				background: #222;
+				height: 500px;
+			}
+
+			.sigma-expand {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+			}
+		</style>
 
 		<script src="jquery.js"></script>
-     <script src="sigma.js" charset="utf-8"></script>
-     <script src="sigma.parseGexf.js" charset="utf-8"></script>
-     <script src="sina.js" charset="utf-8"></script>
-     <!--
-     <script src="jslog.js" charset="utf-8"></script>
-    <script src="popup.js"></script>
-    -->
-  </head>
-  <body>
-	  <table>
-		  <tr>
-			  <td>
-	  <table>
-		  <tr>
-			  <td>
-								Access token: <input id="access_token" type="text"
-								name="access_token"
-								value="2.00IB8SDCS4u4KC78f188c4efMpguJC"/>
-			  </td>
-		  </tr>
-		  <tr>
-			  <td>
+		<script src="sigma.js" charset="utf-8"></script>
+		<script src="sigma.parseGexf.js" charset="utf-8"></script>
+		<script src="sina.js" charset="utf-8"></script>
+		<!--
+		<script src="jslog.js" charset="utf-8"></script>
+		<script src="popup.js"></script>
+		-->
+	</head>
+	<body>
+		<table>
+			<tr>
+				<td>
+					<table>
+						<tr>
+							<td>
+								Access token: <input id="access_token" type="text" name="access_token" value="2.00IB8SDCS4u4KC78f188c4efMpguJC"/>
+							</td>
+						</tr>
+						<tr>
+							<td>
 								Target uid: <input id="target_uid" type="text"
 								name="target_uid"
 								value="1880988434"
 								/>
-			  </td>
-		  </tr>
-		  <tr>
-			  <td>
+							</td>
+						</tr>
+						<tr>
+							<td>
 								<button type="button" id="getUser">Get Users</button>
-			  </td>
-		  </tr>
-		  <tr>
-			  <td>
+							</td>
+						</tr>
+						<tr>
+							<td>
 								<button type="button" id="getRelationships">Get Relationships</button>
-			  </td>
-		  </tr>
-		  <tr>
-			  <td>
+							</td>
+						</tr>
+						<tr>
+							<td>
 								<button type="button" id="generateGraph">Generate Graph</button>
-			  </td>
-		  </tr>
-		  <tr>
-			  <td>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Graph Name: <input id="graph_name" type="text"
+								name="graph_name" value="test.gexf"/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<button type="button" id="renderGraph">Render Graph</button>
+							</td>
+						</tr>
+						<tr>
+							<td>
 								<button type="button">import a cluster</button>
-			  </td>
-		  </tr>
-	  </table>
-			  </td>
-			  <td>
-<textarea rows="4" cols="50">
-</textarea>
-			  </td>
-			  <td>
-		<div class="consolediv" style="overflow: scroll; height: 200px; width: 600px; background: #eee">
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<textarea rows="4" cols="50">
+					</textarea>
+				</td>
+				<td>
+					<div class="consolediv" style="overflow: scroll; height: 200px; width: 600px; background: #eee">
 						<h4 style="text-align:center">Console Log</h4>
 						<p id="console">
 						</p>
-		</div>
-			  </td>
-</tr>
+					</div>
+				</td>
+			</tr>
 		</table>
-<canvas style="position: absolute; background: #000"
-id="sigma-example" class="sigma_mouse_canvas" width="1206px" height="500px"></canvas>
+		<div class="span12 sigma-parent" id="sigma-example-parent">
+			<div class="sigma-expand" id="sigma-example"><canvas style="position: absolute;color: #333;" id="sigma_edges_1" class="sigma_edges_canvas" width="1170px" height="500px"></canvas><canvas style="position: absolute;" id="sigma_nodes_1" class="sigma_nodes_canvas" width="1170px" height="500px"></canvas><canvas style="position: absolute;" id="sigma_labels_1" class="sigma_labels_canvas" width="1170px" height="500px"></canvas><canvas style="position: absolute;" id="sigma_hover_1" class="sigma_hover_canvas" width="1170px" height="500px"></canvas><div style="position: absolute;" id="sigma_monitor_1" class="sigma_monitor_div" width="1170px" height="500px"></div><canvas style="position: absolute;" id="sigma_mouse_1" class="sigma_mouse_canvas" width="1170px" height="500px"></canvas></div>
+		</div>
 	</body>
 </html>
 

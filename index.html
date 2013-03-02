@@ -28,6 +28,7 @@
 				-moz-border-radius: 4px;
 				-webkit-border-radius: 4px;
 				background: #222;
+				width: 950px;
 				height: 500px;
 			}
 
@@ -43,6 +44,7 @@
 		<script src="jquery.js"></script>
 		<script src="sigma.js" charset="utf-8"></script>
 		<script src="sigma.parseGexf.js" charset="utf-8"></script>
+		<script src="sigma.forceatlas2.js" charset="utf-8"></script>
 		<script src="sina.js" charset="utf-8"></script>
 		<!--
 		<script src="jslog.js" charset="utf-8"></script>
@@ -95,27 +97,40 @@
 						</tr>
 						<tr>
 							<td>
-								<button type="button">import a cluster</button>
+								<button type="button" id="stop-layout">Start layout</button>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<button type="button" id="reset">Reset</button>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<textarea rows="4" cols="40">
+								</textarea>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="consolediv" style="overflow: scroll;
+									height: 200px; width: 300px; background: #eee">
+									<!--<h4 style="text-align:center">Console
+										Log</h4>-->
+									<p id="console">
+									</p>
+								</div>
 							</td>
 						</tr>
 					</table>
 				</td>
 				<td>
-					<textarea rows="4" cols="50">
-					</textarea>
-				</td>
-				<td>
-					<div class="consolediv" style="overflow: scroll; height: 200px; width: 600px; background: #eee">
-						<h4 style="text-align:center">Console Log</h4>
-						<p id="console">
-						</p>
+					<div class="span12 sigma-parent" id="sigma-example-parent">
+						<div class="sigma-expand" id="sigma-example"><canvas style="position: absolute;color: #333;" id="sigma_edges_1" class="sigma_edges_canvas" width="950px" height="500px"></canvas><canvas style="position: absolute;" id="sigma_nodes_1" class="sigma_nodes_canvas" width="950px" height="500px"></canvas><canvas style="position: absolute;" id="sigma_labels_1" class="sigma_labels_canvas" width="950px" height="500px"></canvas><canvas style="position: absolute;" id="sigma_hover_1" class="sigma_hover_canvas" width="950px" height="500px"></canvas><div style="position: absolute;" id="sigma_monitor_1" class="sigma_monitor_div" width="950px" height="500px"></div><canvas style="position: absolute;" id="sigma_mouse_1" class="sigma_mouse_canvas" width="950px" height="500px"></canvas></div>
 					</div>
 				</td>
 			</tr>
 		</table>
-		<div class="span12 sigma-parent" id="sigma-example-parent">
-			<div class="sigma-expand" id="sigma-example"><canvas style="position: absolute;color: #333;" id="sigma_edges_1" class="sigma_edges_canvas" width="1170px" height="500px"></canvas><canvas style="position: absolute;" id="sigma_nodes_1" class="sigma_nodes_canvas" width="1170px" height="500px"></canvas><canvas style="position: absolute;" id="sigma_labels_1" class="sigma_labels_canvas" width="1170px" height="500px"></canvas><canvas style="position: absolute;" id="sigma_hover_1" class="sigma_hover_canvas" width="1170px" height="500px"></canvas><div style="position: absolute;" id="sigma_monitor_1" class="sigma_monitor_div" width="1170px" height="500px"></div><canvas style="position: absolute;" id="sigma_mouse_1" class="sigma_mouse_canvas" width="1170px" height="500px"></canvas></div>
-		</div>
 	</body>
 </html>
 

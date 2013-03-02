@@ -223,8 +223,7 @@ function init() {
 			defaultLabelSize: 14,
 			defaultLabelBGColor: '#fff',
 			defaultLabelHoverColor: '#000',
-			labelThreshold: 6,
-			defaultEdgeType: 'curve'
+			labelThreshold: 6
 	}).graphProperties({
 		minNodeSize: 0.5,
 	maxNodeSize: 5,
@@ -235,11 +234,22 @@ function init() {
 	});
 }
 
+var isRunning = false;
+function start() {
+	  // Start the ForceAtlas2 algorithm
+  // (requires "sigma.forceatlas2.js" to be included)
+  sigInst.startForceAtlas2();
+  isRunning = true;
+}
+
 $(function (){
 	sinaClient._init();
 	$("#getUser").click(sc.getFriends);
 	$("#getRelationships").click(sc.getFriendsRelations);
 	$("#generateGraph").click(sc.generateXmlDocumentToTextarea);
+	$("#reset").click(function(){
+		sc.reset();
+	});
 	$("#renderGraph").click(function(){
 		if(!sigInst) init();
 		sigInst.parseGexf("/"+$("#graph_name").val());
@@ -247,4 +257,15 @@ $(function (){
 	});
 	$("#access_token").focusout(function(){sc._init();});
 	$("#target_uid").focusout(function(){sc.target_uid = $("#target_uid")[0].value;});
+  $("#stop-layout").click(function(){
+    if(isRunning){
+      isRunning = false;
+      sigInst.stopForceAtlas2();
+      document.getElementById('stop-layout').childNodes[0].nodeValue = 'Start Layout';
+    }else{
+      isRunning = true;
+      sigInst.startForceAtlas2();
+      document.getElementById('stop-layout').childNodes[0].nodeValue = 'Stop Layout';
+    }
+  });
 });

@@ -230,16 +230,60 @@ function init() {
 	minEdgeSize: 1,
 	maxEdgeSize: 1
 	}).mouseProperties({
-		maxRatio: 32
+		maxRatio: 4
+	});
+
+	var greyColor = '#333';
+	sigInst.bind('downnodes',function(event){
+		var nodes = event.content;
+		var neighbors = {};
+		sigInst.iterEdges(function(e){
+			if(nodes.indexOf(e.source)<0 && nodes.indexOf(e.target)<0){
+				if(!e.attr['grey']){
+					e.attr['true_color'] = !!e.color ? e.color : sigInst.drawingProperties('defaultEdgeColor');
+					e.color = greyColor;
+					e.attr['grey'] = 1;
+				}
+			}else{
+				e.color = e.attr['grey'] ? e.attr['true_color'] : e.color;
+				e.attr['grey'] = 0;
+
+				neighbors[e.source] = 1;
+				neighbors[e.target] = 1;
+			}
+		}).iterNodes(function(n){
+			if(!neighbors[n.id]){
+				if(!n.attr['grey']){
+					n.attr['true_color'] = !!n.color ? n.color: '#000';
+					n.color = greyColor;
+					n.attr['true_label'] = n.label;
+					n.label = "";
+					n.attr['grey'] = 1;
+				}
+			}else{
+				n.color = n.attr['grey'] ? n.attr['true_color'] : n.color;
+				n.label = !!n.attr['true_label']?n.attr['true_label']:n.label;
+				n.attr['grey'] = 0;
+			}
+		}).draw(2,2,2);
+	}).bind('upnodes',function(){
+		sigInst.iterEdges(function(e){
+			e.color = e.attr['grey'] ? e.attr['true_color'] : e.color;
+			e.attr['grey'] = 0;
+		}).iterNodes(function(n){
+			n.color = n.attr['grey'] ? n.attr['true_color'] : n.color;
+			n.label = !!n.attr['true_label']?n.attr['true_label']:n.label;
+			n.attr['grey'] = 0;
+		}).draw(2,2,2);
 	});
 }
 
 var isRunning = false;
 function start() {
-	  // Start the ForceAtlas2 algorithm
-  // (requires "sigma.forceatlas2.js" to be included)
-  sigInst.startForceAtlas2();
-  isRunning = true;
+	// Start the ForceAtlas2 algorithm
+	// (requires "sigma.forceatlas2.js" to be included)
+	sigInst.startForceAtlas2();
+	isRunning = true;
 }
 
 $(function (){
@@ -253,19 +297,20 @@ $(function (){
 	$("#renderGraph").click(function(){
 		if(!sigInst) init();
 		sigInst.parseGexf("/"+$("#graph_name").val());
+
 		sigInst.draw();
 	});
 	$("#access_token").focusout(function(){sc._init();});
 	$("#target_uid").focusout(function(){sc.target_uid = $("#target_uid")[0].value;});
-  $("#stop-layout").click(function(){
-    if(isRunning){
-      isRunning = false;
-      sigInst.stopForceAtlas2();
-      document.getElementById('stop-layout').childNodes[0].nodeValue = 'Start Layout';
-    }else{
-      isRunning = true;
-      sigInst.startForceAtlas2();
-      document.getElementById('stop-layout').childNodes[0].nodeValue = 'Stop Layout';
-    }
-  });
+	$("#stop-layout").click(function(){
+		if(isRunning){
+			isRunning = false;
+			sigInst.stopForceAtlas2();
+			document.getElementById('stop-layout').childNodes[0].nodeValue = 'Start Layout';
+		}else{
+			isRunning = true;
+			sigInst.startForceAtlas2();
+			document.getElementById('stop-layout').childNodes[0].nodeValue = 'Stop Layout';
+		}
+	});
 });
